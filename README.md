@@ -1,1 +1,67 @@
-# finazon-grpc-go-client
+# Finazon Go gRPC Client
+
+This is the official Go library for Finazon, offering access to:
+- Lists of datasets, publishers, markets, and tickers.
+- Market data: ticker snapshots, time series, trades, and technical indicators.
+- Data from specific datasets such as Benzinga, Binance, Crypto, Forex, SEC, and SIP.
+- Full compatibility with both JavaScript and TypeScript.
+
+🔑 **API key** is essential. If you haven't got one yet, [sign up here](https://finazon.io/).
+
+## Quick start
+
+### 1. Set up a new project
+```bash
+mkdir hello-finazon && cd hello-finazon
+go mod init example/hello
+go get github.com/mivxxx/finazon-grpc-go-client
+go mod vendor
+```
+
+### 2. Create `hello-world.go` script
+```go
+package main
+
+import (
+	"fmt"
+	finazon_grpc_go_client "github.com/mivxxx/finazon-grpc-go-client/pb"
+)
+
+const API_KEY = "your_api_key"
+
+func main() {
+	con, err := finazon_grpc_go_client.GetConnection(API_KEY)
+	if err != nil {
+		fmt.Println("%s", err)
+		return
+	}
+
+	timeSeriesClient := con.GetTimeSeriesClient()
+	timeSeriesRequest := finazon_grpc_go_client.GetTimeSeriesRequest{
+		Dataset: "sip_non_pro",
+		Ticker:  "AAPL",
+	}
+	data, err := timeSeriesClient.GetTimeSeries(&timeSeriesRequest)
+	if err != nil {
+		fmt.Println("%s", err)
+		return
+	}
+	fmt.Println("%s", data.String())
+}
+```
+
+### 3. Input your API key
+Replace `'your_api_key'` with your actual key.
+
+### 4. Run the example
+```bash
+go run hello-world.go
+```
+
+📝 Expected output:
+```
+result:{timestamp:1709326680  open:179.655  close:179.695  high:179.73  low:179.64  volume:563082}
+result:{timestamp:1709326620  open:179.67  close:179.66  high:179.672  low:179.6  volume:242826}
+...
+result:{timestamp:1709324940  open:179.71  close:179.68  high:179.715  low:179.64  volume:107197}
+```
