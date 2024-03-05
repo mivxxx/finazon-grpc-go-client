@@ -15,7 +15,7 @@ ${PROTOC}:
 
 .PHONY: generate
 generate: ${PROTOC}
-	#@mkdir -p ${PATH_THIS}/pb
+	@[ "${VERSION}" ] || ( echo "VERSION is not set"; exit 1 )
 	@$(eval mappingFinazon:=$(shell cd ${PATH_THIS}/proto && find . -iname "*.proto" -exec echo --go_opt=M{}=${GO_PACKAGE} \; | awk '{sub(/M.\//,"M")}1'))
 	@$(eval mappingFinazonGrpc:=$(shell cd ${PATH_THIS}/proto && find . -iname "*.proto" -exec echo --go-grpc_opt=M{}=${GO_PACKAGE} \; | awk '{sub(/M.\//,"M")}1'))
 	@rm -rf ${PATH_THIS}/pb/*
@@ -27,7 +27,11 @@ generate: ${PROTOC}
 	  --go-grpc_out=${PATH_THIS}/pb \
 	  ${mappingFinazonGrpc} \
 	  --go-grpc_opt=paths=source_relative
-	 @${PATH_THIS}/generate_extra_code.bash
+	 @${PATH_THIS}/generate_extra_code.bash ${VERSION}
+
+.PHONY: bump_version
+bump_version:
+	@[ "${VERSION}" ] || ( echo "VERSION is not set"; exit 1 )
 
 clean:
 	@rm -rf ${PATH_THIS}/download
