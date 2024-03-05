@@ -35,3 +35,7 @@ bump_version:
 
 clean:
 	@rm -rf ${PATH_THIS}/download
+
+.PHONY: publish
+publish:
+	@echo -n ""
