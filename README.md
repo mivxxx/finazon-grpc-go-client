@@ -15,6 +15,7 @@ This is the official Go library for Finazon, offering access to:
 mkdir hello-finazon && cd hello-finazon
 go mod init example/hello
 go get github.com/mivxxx/finazon-grpc-go-client
+go mod tidy
 go mod vendor
 ```
 
